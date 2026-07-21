@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  api:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Cypress API
+        uses: cypress-io/github-action@v6
+        with:
+          command: npm run test:api
+        env:
+          CYPRESS_apiUrl: https://serverest.dev
+          CYPRESS_frontUrl: https://front.serverest.dev
+      - name: Upload API artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-api-artifacts
+          path: |
+            cypress/reports
+            cypress/screenshots
+            cypress/videos
+          if-no-files-found: ignore
+
+  frontend:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Cypress Frontend
+        uses: cypress-io/github-action@v6
+        with:
+          command: npm run test:frontend
+        env:
+          CYPRESS_apiUrl: https://serverest.dev
+          CYPRESS_frontUrl: https://front.serverest.dev
+      - name: Upload frontend artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-frontend-artifacts
+          path: |
+            cypress/reports
+            cypress/screenshots
+            cypress/videos
+          if-no-files-found: ignore
