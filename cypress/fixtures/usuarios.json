@@ -1,0 +1,12 @@
+{
+  "mensagens": {
+    "cadastroSucesso": "Cadastro realizado com sucesso",
+    "loginSucesso": "Login realizado com sucesso",
+    "emailDuplicado": "Este email já está sendo usado",
+    "credenciaisInvalidas": "Email e/ou senha inválidos",
+    "produtoDuplicado": "Já existe produto com esse nome",
+    "alteradoSucesso": "Registro alterado com sucesso",
+    "usuarioNaoEncontrado": "Usuário não encontrado",
+    "produtoNaoEncontrado": "Produto não encontrado"
+  }
+}
