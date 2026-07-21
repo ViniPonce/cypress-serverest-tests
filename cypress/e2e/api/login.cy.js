@@ -38,9 +38,23 @@ describe('API login', () => {
 
   it('rejeita body vazio', function () {
     api.post('/login', {}).then((response) => {
-      expect(response.status).to.be.oneOf([400, 401]);
-      expect(response.body).to.exist;
-      expect(JSON.stringify(response.body)).to.match(/email|password|inválid/i);
+      expect(response.status).to.eq(400);
+      expect(response.body.email).to.eq(this.dados.mensagens.emailObrigatorio);
+      expect(response.body.password).to.eq(this.dados.mensagens.passwordObrigatorio);
+    });
+  });
+
+  it('rejeita login so com email', function () {
+    api.post('/login', { email: 'qa.parcial@teste.com.br' }).then((response) => {
+      expect(response.status).to.eq(400);
+      expect(response.body.password).to.eq(this.dados.mensagens.passwordObrigatorio);
+    });
+  });
+
+  it('rejeita login so com senha', function () {
+    api.post('/login', { password: 'senhaQualquer' }).then((response) => {
+      expect(response.status).to.eq(400);
+      expect(response.body.email).to.eq(this.dados.mensagens.emailObrigatorio);
     });
   });
 });

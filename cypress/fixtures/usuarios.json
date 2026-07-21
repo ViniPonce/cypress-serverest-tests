@@ -7,6 +7,9 @@
     "produtoDuplicado": "Já existe produto com esse nome",
     "alteradoSucesso": "Registro alterado com sucesso",
     "usuarioNaoEncontrado": "Usuário não encontrado",
-    "produtoNaoEncontrado": "Produto não encontrado"
+    "produtoNaoEncontrado": "Produto não encontrado",
+    "tokenAusente": "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais",
+    "emailObrigatorio": "email é obrigatório",
+    "passwordObrigatorio": "password é obrigatório"
   }
 }

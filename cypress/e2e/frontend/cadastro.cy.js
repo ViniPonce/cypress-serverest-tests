@@ -36,4 +36,12 @@ describe('Cadastro', () => {
       cy.url().should('include', '/cadastrarusuarios');
     });
   });
+
+  it('nao cadastra com campos vazios', function () {
+    CadastroPage.visitar();
+    CadastroPage.preencherFormulario({ nome: '', email: '', password: '' }, false);
+    CadastroPage.submeter();
+    cy.url().should('include', '/cadastrarusuarios');
+    cy.url().should('not.include', '/home');
+  });
 });

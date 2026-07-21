@@ -75,4 +75,23 @@ describe('API produtos', () => {
       });
     });
   });
+
+  it('bloqueia criar produto sem token', function () {
+    const produto = dataFactory.gerarProduto();
+    api.post('/produtos', produto).then((response) => {
+      expect(response.status).to.eq(401);
+      expect(response.body.message).to.eq(this.dados.mensagens.tokenAusente);
+    });
+  });
+
+  it('retorna erro ao buscar id inexistente', function () {
+    cy.criarProdutoViaAPI().then((produto) => {
+      api.delete(`/produtos/${produto._id}`, { headers: api.comAuth(produto.tokenAdmin) }).then(() => {
+        api.get(`/produtos/${produto._id}`).then((response) => {
+          expect(response.status).to.eq(400);
+          expect(response.body.message).to.eq(this.dados.mensagens.produtoNaoEncontrado);
+        });
+      });
+    });
+  });
 });

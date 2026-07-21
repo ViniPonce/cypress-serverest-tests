@@ -80,4 +80,15 @@ describe('API usuarios', () => {
       });
     });
   });
+
+  it('retorna erro ao buscar id inexistente', function () {
+    cy.criarUsuarioViaAPI().then((usuario) => {
+      api.delete(`/usuarios/${usuario._id}`).then(() => {
+        api.get(`/usuarios/${usuario._id}`).then((response) => {
+          expect(response.status).to.eq(400);
+          expect(response.body.message).to.eq(this.dados.mensagens.usuarioNaoEncontrado);
+        });
+      });
+    });
+  });
 });

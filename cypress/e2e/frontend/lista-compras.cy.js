@@ -48,4 +48,15 @@ describe('Lista de compras e sessao', () => {
     cy.visit('/minhaListaDeProdutos');
     LoginPage.validarUrlLogin();
   });
+
+  it('permite rota protegida com sessao valida', () => {
+    cy.criarUsuarioViaAPI({ administrador: 'false' }).then((usuario) => {
+      cy.login(usuario.email, usuario.password);
+      cy.visit('/minhaListaDeProdutos');
+      ListaComprasPage.validarPaginaCarregada();
+      cy.window().then((win) => {
+        expect(win.localStorage.getItem('serverest/userToken')).to.match(/^Bearer\s.+/);
+      });
+    });
+  });
 });
