@@ -1,21 +1,23 @@
 # Cypress + ServeRest
 
-Automação E2E (frontend) e API do [ServeRest](https://serverest.dev/) com Cypress e JavaScript.
+[![CI](https://github.com/ViniPonce/cypress-serverest-tests/actions/workflows/ci.yml/badge.svg)](https://github.com/ViniPonce/cypress-serverest-tests/actions/workflows/ci.yml)
+
+Automação E2E (frontend) e API do [ServeRest](https://serverest.dev/) com **Cypress + JavaScript**.
 
 - Frontend: https://front.serverest.dev/
 - API (Swagger): https://serverest.dev/
 
 ## O que tem aqui
 
-- **3+ cenários** de frontend e **3+** de API (CRUD, auth negativa, sessão)
+- Cenários de frontend e API além do mínimo pedido (CRUD, auth negativa, sessão)
 - Page Objects, custom commands, factory com Faker
 - Teardown automático: massa criada via API é limpa no `afterEach`
 - Validação de schema (AJV) nas respostas principais
-- CI no GitHub Actions (lint + API e frontend em paralelo)
+- CI no GitHub Actions (lint como gate + API/frontend em paralelo + artefatos)
 
 ## Pré-requisitos
 
-- Node.js 18+ (recomendado 20)
+- Node.js 18+ (recomendado 20+)
 - npm
 
 ## Instalação
@@ -27,7 +29,7 @@ npm install
 cp cypress.env.example.json cypress.env.json
 ```
 
-O `cypress.env.json` já aponta para os ambientes públicos. Ajuste só se precisar.
+O `cypress.env.json` aponta para os ambientes públicos. Ajuste só se precisar.
 
 ## Como rodar
 
@@ -68,9 +70,9 @@ cypress/
 
 ## Teardown (limpeza de massa)
 
-Cada teste que cria usuário/produto via API registra o `_id` em memória. No `afterEach`, `cy.limparMassaCriada()`:
+Cada teste que cria usuário/produto via API registra o `_id` (e credenciais quando fizer sentido). No `afterEach`, `cy.limparMassaCriada()`:
 
-1. cancela carrinho aberto (se houver)
+1. autentica os usuários criados e cancela carrinho aberto
 2. deleta produtos criados (com token admin temporário)
 3. deleta usuários criados
 
@@ -82,17 +84,17 @@ Assim a suíte não deixa lixo no ambiente compartilhado e os specs rodam de for
 
 | Spec | O que valida |
 |------|----------------|
-| `usuarios` | criar, email duplicado, GET por id, PUT, DELETE |
-| `login` | sucesso, senha errada, usuário inexistente, body vazio |
-| `produtos` | listar, criar + duplicado, GET por id, PUT, DELETE |
+| `usuarios` | criar, email duplicado, GET por id, PUT, DELETE, id inexistente |
+| `login` | sucesso, senha errada, usuário inexistente, body vazio, só email, só senha |
+| `produtos` | listar, criar + duplicado, GET por id, PUT, DELETE, sem token, id inexistente |
 
 ### Frontend
 
 | Spec | O que valida |
 |------|----------------|
-| `cadastro` | sucesso + redirect, email duplicado |
+| `cadastro` | sucesso + redirect, email duplicado, campos vazios |
 | `login` | sucesso, senha errada, inexistente, campos vazios |
-| `lista-compras` | adicionar, limpar lista, logout, rota protegida sem token |
+| `lista-compras` | adicionar, limpar lista, logout, rota protegida sem/com sessão |
 
 ## Observações sobre o app
 
