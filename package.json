@@ -6,12 +6,20 @@
   "scripts": {
     "cy:open": "cypress open",
     "cypress:open": "cypress open",
-    "test:frontend": "cypress run --spec \"cypress/e2e/frontend/**/*.cy.js\"",
-    "test:e2e": "cypress run --spec \"cypress/e2e/frontend/**/*.cy.js\"",
-    "test:api": "cypress run --spec \"cypress/e2e/api/**/*.cy.js\"",
-    "test:all": "cypress run --spec \"cypress/e2e/**/*.cy.js\"",
+    "test:frontend": "cypress run --spec \"cypress/e2e/frontend/**/*.cy.js\" --env grepTags=@regression",
+    "test:e2e": "cypress run --spec \"cypress/e2e/frontend/**/*.cy.js\" --env grepTags=@regression",
+    "test:api": "cypress run --spec \"cypress/e2e/api/**/*.cy.js\" --env grepTags=@regression",
+    "test:all": "cypress run --spec \"cypress/e2e/**/*.cy.js\" --env grepTags=@regression",
+    "test:smoke": "cypress run --spec \"cypress/e2e/**/*.cy.js\" --env grepTags=@smoke",
+    "test:smoke:api": "cypress run --spec \"cypress/e2e/api/**/*.cy.js\" --env grepTags=@smoke",
+    "test:smoke:frontend": "cypress run --spec \"cypress/e2e/frontend/**/*.cy.js\" --env grepTags=@smoke",
+    "test:regression": "npm run test:all",
+    "report:clean": "node -e \"const fs=require('fs');['cypress/reports','cypress/screenshots','cypress/videos'].forEach(p=>{try{fs.rmSync(p,{recursive:true,force:true})}catch(e){}})\"",
+    "report:merge": "mochawesome-merge \"cypress/reports/mochawesome/.jsons/*.json\" -o cypress/reports/merged.json",
+    "report:html": "marge cypress/reports/merged.json --reportDir cypress/reports/html --reportFilename index --inline true --charts true",
+    "report:build": "node scripts/build-report.js",
     "lint": "eslint . --ext .js",
-    "ci:test": "npm run lint && npm run test:all"
+    "ci:test": "npm run lint && npm run test:all && npm run report:build"
   },
   "keywords": ["cypress", "serverest", "e2e", "api-testing", "qa"],
   "license": "MIT",
@@ -25,6 +33,8 @@
     "cypress": "^14.5.2",
     "cypress-mochawesome-reporter": "^3.8.2",
     "eslint": "^8.57.1",
-    "eslint-plugin-cypress": "^3.6.0"
+    "eslint-plugin-cypress": "^3.6.0",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0"
   }
 }

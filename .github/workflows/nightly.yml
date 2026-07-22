@@ -1,9 +1,10 @@
-name: CI
+name: Nightly Regression
 
 on:
-  push:
-    branches: [main, master]
-  pull_request:
+  schedule:
+    # 03:00 UTC diariamente
+    - cron: '0 3 * * *'
+  workflow_dispatch:
 
 env:
   CYPRESS_apiUrl: https://serverest.dev
@@ -22,8 +23,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
 
-  smoke-api:
-    name: Smoke API
+  regression-api:
+    name: Regression API
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -33,19 +34,19 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Run smoke API
+      - name: Run full API suite
         uses: cypress-io/github-action@v6
         with:
-          command: npm run test:smoke:api
+          command: npm run test:api
       - name: Build HTML report
         if: always()
         run: npm run report:build
         continue-on-error: true
-      - name: Upload smoke API artifacts
+      - name: Upload regression API artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-api-${{ github.run_id }}
+          name: regression-api-${{ github.run_id }}
           path: |
             cypress/reports/html
             cypress/reports/mochawesome
@@ -53,8 +54,8 @@ jobs:
             cypress/videos
           if-no-files-found: ignore
 
-  smoke-frontend:
-    name: Smoke Frontend
+  regression-frontend:
+    name: Regression Frontend
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -64,19 +65,19 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Run smoke frontend
+      - name: Run full frontend suite
         uses: cypress-io/github-action@v6
         with:
-          command: npm run test:smoke:frontend
+          command: npm run test:frontend
       - name: Build HTML report
         if: always()
         run: npm run report:build
         continue-on-error: true
-      - name: Upload smoke frontend artifacts
+      - name: Upload regression frontend artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-frontend-${{ github.run_id }}
+          name: regression-frontend-${{ github.run_id }}
           path: |
             cypress/reports/html
             cypress/reports/mochawesome
