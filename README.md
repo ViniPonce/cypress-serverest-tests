@@ -98,8 +98,6 @@ No CI:
 | Ambiente público compartilhado | Lixo de usuários/produtos entre runs | Teardown cancela carrinho → deleta produtos → deleta usuários |
 | Lista de produtos pode estar poluída | Dificulta achar item na UI | Criamos produto com nome único via API e buscamos pelo nome |
 
-Esses pontos estão documentados de propósito: em ambiente de desafio/demo, **investigar e registrar** quirks do SUT é parte do trabalho de QA sênior.
-
 ---
 
 ## Observabilidade e relatórios
