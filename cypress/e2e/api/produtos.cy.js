@@ -10,7 +10,7 @@ describe('API produtos', () => {
     cy.fixture('schemas/usuario-criado.schema.json').as('schemaCriado');
   });
 
-  it('lista produtos', function () {
+  it('lista produtos @smoke @regression', { tags: ['@smoke', '@regression'] }, function () {
     api.get('/produtos').then((response) => {
       expect(response.status).to.eq(200);
       expect(response.body.quantidade).to.eq(response.body.produtos.length);
@@ -18,7 +18,7 @@ describe('API produtos', () => {
     });
   });
 
-  it('admin cria produto e bloqueia nome duplicado', function () {
+  it('admin cria produto e bloqueia nome duplicado @smoke @regression', { tags: ['@smoke', '@regression'] }, function () {
     cy.criarUsuarioViaAPI({ administrador: 'true' }).then((admin) => {
       cy.loginViaAPI(admin.email, admin.password).then((token) => {
         const produto = dataFactory.gerarProduto();
@@ -35,7 +35,7 @@ describe('API produtos', () => {
     });
   });
 
-  it('busca produto por id', function () {
+  it('busca produto por id @regression', { tags: ['@regression'] }, function () {
     cy.criarProdutoViaAPI().then((produto) => {
       api.get(`/produtos/${produto._id}`).then((response) => {
         expect(response.status).to.eq(200);
@@ -45,7 +45,7 @@ describe('API produtos', () => {
     });
   });
 
-  it('atualiza produto', function () {
+  it('atualiza produto @regression', { tags: ['@regression'] }, function () {
     cy.criarProdutoViaAPI().then((produto) => {
       const atualizado = {
         nome: `${produto.nome} Editado`,
@@ -63,7 +63,7 @@ describe('API produtos', () => {
     });
   });
 
-  it('exclui produto', function () {
+  it('exclui produto @regression', { tags: ['@regression'] }, function () {
     cy.criarProdutoViaAPI().then((produto) => {
       api.delete(`/produtos/${produto._id}`, { headers: api.comAuth(produto.tokenAdmin) }).then((response) => {
         expect(response.status).to.eq(200);
@@ -76,7 +76,7 @@ describe('API produtos', () => {
     });
   });
 
-  it('bloqueia criar produto sem token', function () {
+  it('bloqueia criar produto sem token @regression', { tags: ['@regression'] }, function () {
     const produto = dataFactory.gerarProduto();
     api.post('/produtos', produto).then((response) => {
       expect(response.status).to.eq(401);
@@ -84,7 +84,27 @@ describe('API produtos', () => {
     });
   });
 
-  it('retorna erro ao buscar id inexistente', function () {
+  it('bloqueia criar produto com usuario nao-admin @smoke @regression', { tags: ['@smoke', '@regression'] }, function () {
+    cy.criarUsuarioViaAPI({ administrador: 'false' }).then((usuario) => {
+      cy.loginViaAPI(usuario.email, usuario.password).then((token) => {
+        const produto = dataFactory.gerarProduto();
+        api.post('/produtos', produto, { headers: api.comAuth(token) }).then((response) => {
+          expect(response.status).to.eq(403);
+          expect(response.body.message).to.eq(this.dados.mensagens.rotaAdmin);
+        });
+      });
+    });
+  });
+
+  it('bloqueia criar produto com token invalido @smoke @regression', { tags: ['@smoke', '@regression'] }, function () {
+    const produto = dataFactory.gerarProduto();
+    api.post('/produtos', produto, { headers: api.comAuth('Bearer tokenInvalido123') }).then((response) => {
+      expect(response.status).to.eq(401);
+      expect(response.body.message).to.eq(this.dados.mensagens.tokenAusente);
+    });
+  });
+
+  it('retorna erro ao buscar id inexistente @regression', { tags: ['@regression'] }, function () {
     cy.criarProdutoViaAPI().then((produto) => {
       api.delete(`/produtos/${produto._id}`, { headers: api.comAuth(produto.tokenAdmin) }).then(() => {
         api.get(`/produtos/${produto._id}`).then((response) => {

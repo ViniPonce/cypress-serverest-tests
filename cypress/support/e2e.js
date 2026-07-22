@@ -1,5 +1,6 @@
 import 'cypress-mochawesome-reporter/register';
 import './commands';
+import './tags';
 
 const massa = require('../utils/massa');
 

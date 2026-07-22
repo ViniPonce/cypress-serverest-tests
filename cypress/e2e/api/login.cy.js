@@ -8,7 +8,7 @@ describe('API login', () => {
     cy.fixture('schemas/login.schema.json').as('schemaLogin');
   });
 
-  it('autentica e devolve bearer', function () {
+  it('autentica e devolve bearer @smoke @regression', { tags: ['@smoke', '@regression'] }, function () {
     cy.criarUsuarioViaAPI().then((usuario) => {
       api.post('/login', { email: usuario.email, password: usuario.password }).then((response) => {
         expect(response.status).to.eq(200);
@@ -19,7 +19,7 @@ describe('API login', () => {
     });
   });
 
-  it('rejeita senha errada', function () {
+  it('rejeita senha errada @regression', { tags: ['@regression'] }, function () {
     cy.criarUsuarioViaAPI().then((usuario) => {
       api.post('/login', { email: usuario.email, password: 'senhaErrada123' }).then((response) => {
         expect(response.status).to.eq(401);
@@ -28,7 +28,7 @@ describe('API login', () => {
     });
   });
 
-  it('rejeita usuario inexistente', function () {
+  it('rejeita usuario inexistente @regression', { tags: ['@regression'] }, function () {
     const credenciais = dataFactory.credenciaisInvalidas();
     api.post('/login', credenciais).then((response) => {
       expect(response.status).to.eq(401);
@@ -36,7 +36,7 @@ describe('API login', () => {
     });
   });
 
-  it('rejeita body vazio', function () {
+  it('rejeita body vazio @regression', { tags: ['@regression'] }, function () {
     api.post('/login', {}).then((response) => {
       expect(response.status).to.eq(400);
       expect(response.body.email).to.eq(this.dados.mensagens.emailObrigatorio);
@@ -44,14 +44,14 @@ describe('API login', () => {
     });
   });
 
-  it('rejeita login so com email', function () {
+  it('rejeita login so com email @regression', { tags: ['@regression'] }, function () {
     api.post('/login', { email: 'qa.parcial@teste.com.br' }).then((response) => {
       expect(response.status).to.eq(400);
       expect(response.body.password).to.eq(this.dados.mensagens.passwordObrigatorio);
     });
   });
 
-  it('rejeita login so com senha', function () {
+  it('rejeita login so com senha @regression', { tags: ['@regression'] }, function () {
     api.post('/login', { password: 'senhaQualquer' }).then((response) => {
       expect(response.status).to.eq(400);
       expect(response.body.email).to.eq(this.dados.mensagens.emailObrigatorio);

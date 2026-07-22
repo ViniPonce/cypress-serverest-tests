@@ -9,7 +9,7 @@ describe('Cadastro', () => {
     cy.fixture('usuarios').as('dados');
   });
 
-  it('cadastra usuario e vai pra home', function () {
+  it('cadastra usuario e vai pra home @smoke @regression', { tags: ['@smoke', '@regression'] }, function () {
     const usuario = dataFactory.gerarUsuario({ administrador: 'false' });
     CadastroPage.visitar();
     CadastroPage.preencherFormulario(usuario, false);
@@ -27,7 +27,7 @@ describe('Cadastro', () => {
     });
   });
 
-  it('nao deixa cadastrar email duplicado', function () {
+  it('nao deixa cadastrar email duplicado @regression', { tags: ['@regression'] }, function () {
     cy.criarUsuarioViaAPI({ administrador: 'false' }).then((usuario) => {
       CadastroPage.visitar();
       CadastroPage.preencherFormulario(usuario, false);
@@ -37,7 +37,7 @@ describe('Cadastro', () => {
     });
   });
 
-  it('nao cadastra com campos vazios', function () {
+  it('nao cadastra com campos vazios @regression', { tags: ['@regression'] }, function () {
     CadastroPage.visitar();
     CadastroPage.preencherFormulario({ nome: '', email: '', password: '' }, false);
     CadastroPage.submeter();

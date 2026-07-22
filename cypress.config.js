@@ -16,13 +16,16 @@ module.exports = defineConfig({
     reporter: 'cypress-mochawesome-reporter',
     reporterOptions: {
       reportDir: 'cypress/reports/mochawesome',
-      overwrite: true,
-      html: false,
+      reportFilename: 'report',
+      overwrite: false,
+      html: true,
       json: true,
+      saveJson: true,
       charts: true,
       embeddedScreenshots: true,
       inlineAssets: true,
       saveAllAttempts: false,
+      reportPageTitle: 'ServeRest — Cypress Report',
     },
     setupNodeEvents(on, config) {
       // eslint-disable-next-line global-require

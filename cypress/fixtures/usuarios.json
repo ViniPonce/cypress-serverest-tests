@@ -9,6 +9,7 @@
     "usuarioNaoEncontrado": "Usuário não encontrado",
     "produtoNaoEncontrado": "Produto não encontrado",
     "tokenAusente": "Token de acesso ausente, inválido, expirado ou usuário do token não existe mais",
+    "rotaAdmin": "Rota exclusiva para administradores",
     "emailObrigatorio": "email é obrigatório",
     "passwordObrigatorio": "password é obrigatório"
   }

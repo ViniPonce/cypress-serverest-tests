@@ -7,7 +7,7 @@ describe('Login', () => {
     cy.fixture('usuarios').as('dados');
   });
 
-  it('loga com sucesso', function () {
+  it('loga com sucesso @smoke @regression', { tags: ['@smoke', '@regression'] }, function () {
     cy.criarUsuarioViaAPI({ administrador: 'false' }).then((usuario) => {
       cy.login(usuario.email, usuario.password);
       HomePage.validarPaginaCarregada();
@@ -18,7 +18,7 @@ describe('Login', () => {
     });
   });
 
-  it('mostra erro com senha errada', function () {
+  it('mostra erro com senha errada @regression', { tags: ['@regression'] }, function () {
     cy.criarUsuarioViaAPI({ administrador: 'false' }).then((usuario) => {
       LoginPage.visitar();
       LoginPage.preencherCredenciais(usuario.email, 'senhaErrada123');
@@ -28,7 +28,7 @@ describe('Login', () => {
     });
   });
 
-  it('mostra erro pra usuario inexistente', function () {
+  it('mostra erro pra usuario inexistente @regression', { tags: ['@regression'] }, function () {
     const credenciais = dataFactory.credenciaisInvalidas();
     LoginPage.visitar();
     LoginPage.preencherCredenciais(credenciais.email, credenciais.password);
@@ -37,7 +37,7 @@ describe('Login', () => {
     LoginPage.validarMensagemErro(this.dados.mensagens.credenciaisInvalidas);
   });
 
-  it('nao loga com campos vazios', function () {
+  it('nao loga com campos vazios @regression', { tags: ['@regression'] }, function () {
     LoginPage.visitar();
     LoginPage.preencherCredenciais('', '');
     LoginPage.submeter();

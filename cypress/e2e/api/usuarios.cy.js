@@ -10,7 +10,7 @@ describe('API usuarios', () => {
     cy.fixture('schemas/usuario-por-id.schema.json').as('schemaUsuarioId');
   });
 
-  it('cria usuario com sucesso', function () {
+  it('cria usuario com sucesso @smoke @regression', { tags: ['@smoke', '@regression'] }, function () {
     const usuario = dataFactory.gerarUsuario();
     api.post('/usuarios', usuario).then((response) => {
       expect(response.status).to.eq(201);
@@ -24,7 +24,7 @@ describe('API usuarios', () => {
     });
   });
 
-  it('nao deixa email duplicado', function () {
+  it('nao deixa email duplicado @regression', { tags: ['@regression'] }, function () {
     cy.criarUsuarioViaAPI().then((usuario) => {
       const payload = {
         nome: usuario.nome,
@@ -39,7 +39,7 @@ describe('API usuarios', () => {
     });
   });
 
-  it('busca usuario por id', function () {
+  it('busca usuario por id @regression', { tags: ['@regression'] }, function () {
     cy.criarUsuarioViaAPI().then((usuario) => {
       api.get(`/usuarios/${usuario._id}`).then((response) => {
         expect(response.status).to.eq(200);
@@ -50,7 +50,7 @@ describe('API usuarios', () => {
     });
   });
 
-  it('atualiza usuario', function () {
+  it('atualiza usuario @regression', { tags: ['@regression'] }, function () {
     cy.criarUsuarioViaAPI().then((usuario) => {
       const atualizado = {
         nome: `${usuario.nome} Editado`,
@@ -68,7 +68,7 @@ describe('API usuarios', () => {
     });
   });
 
-  it('exclui usuario', function () {
+  it('exclui usuario @regression', { tags: ['@regression'] }, function () {
     cy.criarUsuarioViaAPI().then((usuario) => {
       api.delete(`/usuarios/${usuario._id}`).then((response) => {
         expect(response.status).to.eq(200);
@@ -81,7 +81,7 @@ describe('API usuarios', () => {
     });
   });
 
-  it('retorna erro ao buscar id inexistente', function () {
+  it('retorna erro ao buscar id inexistente @regression', { tags: ['@regression'] }, function () {
     cy.criarUsuarioViaAPI().then((usuario) => {
       api.delete(`/usuarios/${usuario._id}`).then(() => {
         api.get(`/usuarios/${usuario._id}`).then((response) => {
